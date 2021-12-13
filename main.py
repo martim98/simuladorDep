@@ -19,10 +19,14 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                                       "margin-top": "-10px", "margin-bottom":"-10px", "margin-left":"10px", "margin-right":"10px"}),
 
                        html.H2("Simulador de deputados eleitos"),
-                       html.H3("Insira aqui os resultados das sondagens:", style={"text-align":"left", "margin-left":"10px"}),
+                       html.H3("Mova os sliders conforme os resultados e a tabela atualiza automaticamente:", style={"text-align":"left", "margin-left":"10px"}),
+                       html.P("Nota: os intervalos sugeridos em cada slider são apenas sugestivos para que a soma total não ultrapasse os 95% ou seja inferior a 88% ",
+                              style={"text-align":"left", "margin-left":"10px"}),
                        html.Div([
+                           html.H2(id="disp_tot", style={"text-align":"center"}),
+                           html.P("O total deve estar entre 88% - 94%", style={"text-align":"center"}),
                            html.H3("PS %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='PS_v',
                                min=0,
                                max=100,
@@ -32,7 +36,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("PSD %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='PSD_v',
                                min=0,
                                max=100,
@@ -41,7 +45,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("BE %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='BE_v',
                                min=0,
                                max=100,
@@ -50,7 +54,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("CDS %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='CDS_v',
                                min=0,
                                max=100,
@@ -59,7 +63,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("CDU %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='CDU_v',
                                min=0,
                                max=100,
@@ -68,7 +72,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("PAN %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='PAN_v',
                                min=0,
                                max=100,
@@ -77,7 +81,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("Livre %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='Livre_v',
                                min=0,
                                max=100,
@@ -86,7 +90,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("Iniciativa Liberal %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='IL_v',
                                min=0,
                                max=100,
@@ -95,7 +99,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                tooltip={"placement": "top", "always_visible": True}),
 
                            html.H3("Chega %"),
-                           dcc.Slider(
+                           dcc.Slider(className="sliders",
                                id='Chega_v',
                                min=0,
                                max=100,
@@ -103,11 +107,9 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["Chega"][0],
                                tooltip={"placement": "top", "always_visible": True})
 
-                       ], style={"float":"left", "width":"30%", "background-color":"#68C0E3", "margin":"10px"}),
+                       ], style={"float":"left", "width":"30%", "background-color":"#68C0E3", "margin":"10px", "text-align":"left", "padding":"10px"}),
 
                         html.Div([
-                        html.H2(id="disp_tot", style={"text-align":"center"}),
-                        html.H3("O total deve estar entre 88% - 94%", style={"text-align":"center"}),
                         html.H3("Numero de deputados eleitos:", style={"text-align":"left"}),
 
                         dash_table.DataTable(id="output-container", sort_action="native",
@@ -171,7 +173,6 @@ def create_table(a, b, c, d, e, f, g,h,i ):
 
         if value == "A":
             continue
-        print(value)
         perc = float(data_test[value][0])
         spare_max = 95 - total_n
         spare_min = total_n - 88

@@ -1,0 +1,12 @@
+.sliders {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  margin-bottom: -30px;
+/* Full-width */
+  height: 25px; /* Specified height */
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
