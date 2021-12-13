@@ -21,7 +21,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                        html.H2("Simulador de deputados eleitos"),
                        html.H3("Insira aqui os resultados das sondagens:", style={"text-align":"left", "margin-left":"10px"}),
                        html.Div([
-                           html.H3("PS"),
+                           html.H3("PS %"),
                            dcc.Slider(
                                id='PS_v',
                                min=0,
@@ -31,7 +31,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                #marks={i:str(i) for i in range(0, 110, 10)},
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("PSD"),
+                           html.H3("PSD %"),
                            dcc.Slider(
                                id='PSD_v',
                                min=0,
@@ -40,7 +40,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["PSD"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("BE"),
+                           html.H3("BE %"),
                            dcc.Slider(
                                id='BE_v',
                                min=0,
@@ -49,7 +49,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["BE"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("CDS"),
+                           html.H3("CDS %"),
                            dcc.Slider(
                                id='CDS_v',
                                min=0,
@@ -58,7 +58,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["CDS"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("CDU"),
+                           html.H3("CDU %"),
                            dcc.Slider(
                                id='CDU_v',
                                min=0,
@@ -67,7 +67,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["CDU"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("PAN"),
+                           html.H3("PAN %"),
                            dcc.Slider(
                                id='PAN_v',
                                min=0,
@@ -76,7 +76,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["PAN"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("Livre"),
+                           html.H3("Livre %"),
                            dcc.Slider(
                                id='Livre_v',
                                min=0,
@@ -85,7 +85,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["Livre"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("Iniciativa Liberal"),
+                           html.H3("Iniciativa Liberal %"),
                            dcc.Slider(
                                id='IL_v',
                                min=0,
@@ -94,7 +94,7 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                                value=data_test["IL"][0],
                                tooltip={"placement": "top", "always_visible": True}),
 
-                           html.H3("Chega"),
+                           html.H3("Chega %"),
                            dcc.Slider(
                                id='Chega_v',
                                min=0,
@@ -109,7 +109,9 @@ app.layout = html.Div([html.H1("Politica 230", style={"text-align":"center", "fo
                         html.H2(id="disp_tot", style={"text-align":"center"}),
                         html.H3("O total deve estar entre 88% - 94%", style={"text-align":"center"}),
                         html.H3("Numero de deputados eleitos:", style={"text-align":"left"}),
-                        dash_table.DataTable(id="output-container", sort_action="native", style_cell={"text-align":"center"}),
+
+                        dash_table.DataTable(id="output-container", sort_action="native",
+                                             style_cell={"text-align":"center"}),
                        html.H1(id="a")], style={"float":"left", "width":"65%"})
 
 
@@ -122,7 +124,18 @@ from test_draw import calculate_deps
 @app.callback(
     [Output(component_id="output-container", component_property="columns"),
      Output(component_id="output-container", component_property="data"),
-     Output(component_id="disp_tot", component_property="children")],
+     Output(component_id="disp_tot", component_property="children"),
+
+     Output(component_id="PS_v", component_property="marks"),
+     Output(component_id="PSD_v", component_property="marks"),
+     Output(component_id="BE_v", component_property="marks"),
+     Output(component_id="CDS_v", component_property="marks"),
+     Output(component_id="CDU_v", component_property="marks"),
+     Output(component_id="PAN_v", component_property="marks"),
+     Output(component_id="Livre_v", component_property="marks"),
+     Output(component_id="IL_v", component_property="marks"),
+     Output(component_id="Chega_v", component_property="marks")],
+
     [Input(component_id="PS_v", component_property="value"),
      Input(component_id="PSD_v", component_property="value"),
      Input(component_id="BE_v", component_property="value"),
@@ -147,8 +160,31 @@ def create_table(a, b, c, d, e, f, g,h,i ):
                  "IL":[h],
                  "Chega":[i]}
 
+
+
+
     total_n =int(a+b+c+d+e+f+g+h+i)
     total =  "Total: " + str(total_n) + "%"
+
+    dicts_store = []
+    for value in data_test.keys():
+
+        if value == "A":
+            continue
+        print(value)
+        perc = float(data_test[value][0])
+        spare_max = 95 - total_n
+        spare_min = total_n - 88
+        val_max = round(perc + spare_max, 1)
+        val_min = round(perc - spare_min, 1)
+
+
+        if val_min <0:
+            val_min=0
+        if val_max > 100:
+            val_max=100
+        dict_aux = {val_min: {'label': "", "style": {'color':'#FF8700'}}, val_max:{'label': "", "style":{'color':'#FF8700'}}}
+        dicts_store.append(dict_aux)
 
     if total_n <95 and total_n>=88:
         b = calculate_deps(data_test, 1)
@@ -161,9 +197,9 @@ def create_table(a, b, c, d, e, f, g,h,i ):
         data = b.to_dict("records")
 
 
-    return columns, data, [total]
+    return columns, data, [total], dicts_store[0],dicts_store[1],dicts_store[2],dicts_store[3],dicts_store[4],dicts_store[5],dicts_store[6],dicts_store[7],dicts_store[8]
 
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=2000)
+    app.run_server(host='0.0.0.0')
