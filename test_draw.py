@@ -18,6 +18,7 @@ data_test = {"PS":[39.16],
 
 def calculate_deps(data_input, rand, variation=0):
     data_input = pd.DataFrame(data_input)
+    data_final_deps_tot = pd.DataFrame()
     dict_test = []
     for scenario in [0, 1, 2]:
         for circ in range(22):
@@ -67,6 +68,12 @@ def calculate_deps(data_input, rand, variation=0):
                 df_test = pd.DataFrame(df_aux)
                 df_test_count = df_test.groupby(by=df_test.index).count()
 
+                df_test.columns = ["value"]
+                df_test["Partido"] = df_test.index
+                df_test["Circulo"] = circ_selec
+
+                data_final_deps_tot = pd.concat([data_final_deps_tot, df_test])
+
             elif scenario == 10:
                 to_add = (last_sond / tot_vec)
                 circ_baseline = res_elei[res_elei.circulo==circ_selec].iloc[0, 1:11] * to_add
@@ -103,8 +110,11 @@ def calculate_deps(data_input, rand, variation=0):
                 df_aux = df_aux.sort_values(ascending=False)[:n_deps]
 
                 df_test = pd.DataFrame(df_aux)
+
+
                 df_test_count = df_test.groupby(by=df_test.index).count()
-                dict_test.append(df_test_count)
+
+
 
 
 
@@ -130,6 +140,18 @@ def calculate_deps(data_input, rand, variation=0):
             total_deps_tot = pd.concat([total_deps_tot, total_deps_tot_aux])
 
 
+    data_deps_list = []
+    # Code to create the deps list
+
+    data_final_deps_tot["rank por circulo"] = data_final_deps_tot.groupby(["Partido", "Circulo"])["value"].rank(ascending=False)
+    data_final_deps_tot["rank Global Partido"] = data_final_deps_tot.groupby(["Partido"])["value"].rank(ascending=False)
+    df_m = pd.read_csv("list_deps.csv")
+    data_final_deps_tot_out = df_m.merge(data_final_deps_tot, on=["rank por circulo", "Partido", "Circulo"], how="outer")
+    data_final_deps_tot_out = data_final_deps_tot_out.fillna("Nome do deputado por inserir")
+    data_final_deps_tot_out = data_final_deps_tot_out[data_final_deps_tot_out.value_y != '']
+    data_final_deps_tot_out["Deputado"] = data_final_deps_tot_out.value_x
+    data_final_deps_tot_out = data_final_deps_tot_out[["rank por circulo", "Deputado", "Circulo", "Partido"]]
+
     total_deps_tot.columns = ["deputados", "scenario"]
     total_deps_tot.reset_index(inplace=True)
     total_deps_tot = total_deps_tot.sort_values("deputados", ascending=False)
@@ -146,7 +168,7 @@ def calculate_deps(data_input, rand, variation=0):
     final_table = final_table[["Cenário mais provável", "Cenário conservador","Cenário ajustado"]]
 
 
-    return final_table
+    return final_table, data_final_deps_tot_out
 
 
 
