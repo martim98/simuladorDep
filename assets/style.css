@@ -1,12 +1,26 @@
+
+
+
 .sliders {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  margin-bottom: -30px;
-/* Full-width */
-  height: 25px; /* Specified height */
-  outline: none; /* Remove outline */
-  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
+    display: inline;
+  padding:10px;
+  border:1px;;
+  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  border-radius:6px;
+   width: 60px;
+   margin-right: 40px;
+   font-size: 15pt;
+
 }
 
+.sliders:focus {
+    outline: none;
+}
+
+input:required {
+    box-shadow:none;
+}
+
+input:invalid {
+    outline: none;
+}
