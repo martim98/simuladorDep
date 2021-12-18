@@ -116,12 +116,6 @@ def calculate_deps(data_input, rand, variation=0):
 
 
 
-
-
-
-
-
-
             if circ==0:
                 total_deps = df_test_count
             else:
@@ -145,10 +139,11 @@ def calculate_deps(data_input, rand, variation=0):
 
     data_final_deps_tot["rank por circulo"] = data_final_deps_tot.groupby(["Partido", "Circulo"])["value"].rank(ascending=False)
     data_final_deps_tot["rank Global Partido"] = data_final_deps_tot.groupby(["Partido"])["value"].rank(ascending=False)
+    
     df_m = pd.read_csv("list_deps.csv")
     data_final_deps_tot_out = df_m.merge(data_final_deps_tot, on=["rank por circulo", "Partido", "Circulo"], how="outer")
     data_final_deps_tot_out = data_final_deps_tot_out.fillna("Nome do deputado por inserir")
-    data_final_deps_tot_out = data_final_deps_tot_out[data_final_deps_tot_out.value_y != '']
+    data_final_deps_tot_out = data_final_deps_tot_out[data_final_deps_tot_out.value_y != "Nome do deputado por inserir"]
     data_final_deps_tot_out["Deputado"] = data_final_deps_tot_out.value_x
     data_final_deps_tot_out = data_final_deps_tot_out[["rank por circulo", "Deputado", "Circulo", "Partido"]]
 

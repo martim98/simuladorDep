@@ -12,6 +12,7 @@ import plotly.graph_objs as go
 import plotly.express as px
 from test_draw import data_test
 from copy import deepcopy
+from time import sleep
 
 
 
@@ -33,90 +34,101 @@ app.layout = html.Div([html.H1(["Politica",
                            html.H3("PS %"),
                            dcc.Input(className="sliders",
                                id='PS_v',
+                                debounce=True,
                                 type="number",
                                min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["PS"][0])], style={"width":"10%","display":"inline-block"}),
 
                            html.Div([
                            html.H3("PSD %"),
                            dcc.Input(className="sliders",
                                id='PSD_v',
+
                                type="number",
+                            debounce=True,
                                min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["PSD"][0])], style={"width":"10%","display":"inline-block"}),
 
                            html.Div([
                            html.H3("BE %"),
                            dcc.Input(className="sliders",
                                id='BE_v',
+                                     debounce=True,
                                      type="number",
                                min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["BE"][0])], style={"width":"10%", "display":"inline-block"}),
                            html.Div([
                            html.H3("CDS %"),
                            dcc.Input(className="sliders",
                                id='CDS_v',
-                                     type="number",
+                                    type="number",
                                min=0,
-                               max=100,
-                               step=1,
+                                     debounce=True,
+                                     max=100,
+                               step=0.1,
                                value=data_test["CDS"][0])], style={"width":"10%", "display":"inline-block"}),
                            html.Div([
                            html.H3("CDU %"),
                            dcc.Input(className="sliders",
                                id='CDU_v',
+                                     debounce=True,
                                      type="number",
                                min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["CDU"][0])], style={"width":"10%","display":"inline-block"}),
                            html.Div([
                            html.H3("PAN %"),
                            dcc.Input(className="sliders",
                                id='PAN_v',
-                                     type="number",
-                               min=0,
+                                    type="number",
+                                     debounce=True,
+                                     min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["PAN"][0])], style={"width":"10%","display":"inline-block"}),
                            html.Div([
                            html.H3("Livre %"),
                            dcc.Input(className="sliders",
                                id='Livre_v',
-                                     type="number",
+                               type="number",
                                min=0,
-                               max=100,
-                               step=1,
+                                     debounce=True,
+                                     max=100,
+                               step=0.1,
                                value=data_test["Livre"][0])], style={"width":"10%","display":"inline-block"}),
                            html.Div([
                            html.H3("Iniciativa Liberal %"),
                            dcc.Input(className="sliders",
                                id='IL_v',
-                                     type="number",
-                               min=0,
+                                    type="number",
+                                     debounce=True,
+                                     min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["IL"][0])], style={"width":"10%", "display":"inline-block"}),
                            html.Div([
                            html.H3("Chega %"),
                            dcc.Input(className="sliders",
                                id='Chega_v',
-                                     type="number",
-                               min=0,
+                                   type="number",
+                                     debounce=True,
+                                     min=0,
                                max=100,
-                               step=1,
+                               step=0.1,
                                value=data_test["Chega"][0])], style={"width":"10%","display":"inline-block"}),
 
-                            html.Div([html.H2("88% < ", style={"display":"inline-block"}),
-                                html.H2(id="disp_tot", style={"display":"inline-block", "color":"#e68200", "-webkit-text-stroke":"0.7px black"}),
-                                      html.H2(" < 95%", style={"display":"inline-block"})
-                            ], style = {"text-align":"center"})
+                            html.Div([html.H2(id="disp_tot", style={"display":"inline-block", "color":"#e68200", "-webkit-text-stroke":"0.7px black"}),
+                                        html.H2(" ", style={"display":"inline-block"}),
+                                      html.H2(" < 95%", style={"display":"inline-block"}),
+
+                                     html.H3("Clique em qualquer lado para atualizar", style={"margin-top":"-10px"})], style = {"text-align":"center"})
 
                        ], style={ "background-color":"#7d98ba",
                                   "margin":"40px", "text-align":"left", "padding-left":"30px"}),
@@ -169,7 +181,7 @@ from test_draw import calculate_deps
      Output(component_id="output-container2", component_property="columns"),
      Output(component_id="output-container2", component_property="data")],
 
-    [Input(component_id="PS_v", component_property="value"),
+    [Input(component_id="PS_v", component_property="value", ),
      Input(component_id="PSD_v", component_property="value"),
      Input(component_id="BE_v", component_property="value"),
      Input(component_id="CDS_v", component_property="value"),
@@ -181,6 +193,28 @@ from test_draw import calculate_deps
 )
 
 def create_table(a, b, c, d, e, f, g,h,i ):
+    try:
+        a = float(a)
+        b = float(b)
+        c = float(c)
+        d = float(d)
+        e = float(e)
+        f = float(f)
+        g = float(g)
+        h = float(h)
+        i = float(i)
+
+    except TypeError:
+        b = pd.DataFrame(
+            {"Espere": ["A Atualizar ...."]})
+        columns = [{"name": i, "id": i} for i in b.columns]
+        data = b.to_dict("records")
+        columns2 = columns
+        data2 = data
+
+        return columns, data, [0], \
+               columns2, data2
+
 
     data_p= {"PS":[a],
                  "PSD":[b],
@@ -194,7 +228,8 @@ def create_table(a, b, c, d, e, f, g,h,i ):
                  "Chega":[i]}
 
 
-    data_test = deepcopy({i:[round(data_p[i][0], 2)] for i in data_p.keys()})
+    data_test = {i:[round(data_p[i][0], 2)] for i in data_p.keys()}
+    print(data_test)
 
     total_n =int(a+b+c+d+e+f+g+h+i)
     total = " " + str(round(a+b+c+d+e+f+g+h+i, 1)) + "% "
@@ -219,7 +254,7 @@ def create_table(a, b, c, d, e, f, g,h,i ):
         dict_aux = {val_min: {'label': "", "style": {'color':'#FF8700'}}, val_max:{'label': "", "style":{'color':'#FF8700'}}}
         dicts_store.append(dict_aux)
 
-    if total_n <95 and total_n>=88:
+    if total_n <95:
         b, c = calculate_deps(data_test, 1)
         b.insert(0, 'Partidos', b.index)
         columns = [{"name":i, "id":i} for i in b.columns]

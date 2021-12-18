@@ -1,4 +1,34 @@
 ﻿rank por circulo,value,Partido,Circulo
+1,Catarina Martins,BE,Porto
+1,Mariana Mortágua,BE,Lisboa
+2,Pedro Filipe Soares,BE,Lisboa
+3,Bruno Maia,BE,Lisboa
+4,Beatriz Gomes Dias,BE,Lisboa
+5,Leonor Rosas,BE,Lisboa
+6,Alexandre Abreu,BE,Lisboa
+2,José Soeiro,BE,Porto
+3,Isabel Pires,BE,Porto
+1,Francisco Rodrigues dos Santos,CDS,Lisboa
+1,Filipa Correia Pinto,CDS,Porto
+1,André Ventura,Chega,Lisboa
+2,Rui Paulo Sousa,Chega,Lisboa
+3,Rita Matias,Chega,Lisboa
+4,Pedro Pessanha,,Lisboa
+1,Manuel Rego,Chega,Viana
+1,Sérgio Ramos,Chega,VilaReal
+1,José Marques,Chega,Guarda
+1,José Pacheco,Chega,Açores
+1,Martinho Gouveia,Chega,Madeira
+1,Rui Afonso,Chega,Porto
+2,Diogo Pacheco Amorim,Chega,Porto
+3,Marta Trindade,Chega,Porto
+1,Filipe Melo,Chega,Braga
+1,Edalberto Figueiredo,Chega,Evora
+1,Bruno Nunes,Chega,Setubal
+1,Ana Moisão,Chega,Beja
+1,Ines Sousa Real,PAN,Lisboa
+1,Bebiana Cunha,PAN,Porto
+1,Vitor Pinto,PAN,Setubal
 1,Francisco Miguel Vital Gomes do Vale César ,PS,Açores
 2,Sérgio Humberto Rocha de Ávila ,PS,Açores
 3,Isabel Maria Duarte Almeida Rodrigues ,PS,Açores
@@ -23,28 +53,8 @@
 1,Pedro do Carmo,PS,Beja
 2,Nelson Domingos Brito,PS,Beja
 3,Telma Cristina Felizardo Guerreiro,PS,Beja
-1,André Ventura,Chega,Lisboa
-1,Manuel Rego,Chega,Viana
-1,Sérgio Ramos,Chega,VilaReal
-1,José Marques,Chega,Guarda
-1,José Pacheco,Chega,Açores
-1,Martinho Gouveia,Chega,Madeira
-1,Rui Afonso,Chega,Porto
-1,Filipe Melo,Chega,Braga
-1,Edalberto Figueiredo,Chega,Evora
-1,Bruno Nunes,Chega,Setubal
-1,Ana Moisão,Chega,Beja
-1,Francisco Rodrigues dos Santos,CDS,Lisboa
-1,Manuel Monteiro,CDS,Porto
-1,Ines Sousa Real,PAN,Lisboa
-1,Bebiana Cunha,PAN,Porto
-1,Vitor Pinto,PAN,Setubal
-1,Catarina Martins,BE,Porto
-1,Mariana Mortágua,BE,Lisboa
-2,Pedro Filipe Soares,BE,Lisboa
-3,Bruno Maia,BE,Lisboa
-4,Beatriz Gomes Dias,BE,Lisboa
-5,Leonor Rosas,BE,Lisboa
-6,Alexandre Abreu,BE,Lisboa
-2,José Soeiro,BE,Porto
-3,Isabel Pires,BE,Porto
+1,João Cotrim Figueiredo,IL,Lisboa
+2,Carla Castro,IL,Lisboa
+3,Rodrigo Saraiva,IL,Lisboa
+1,Carlos Guimaraes Pinto,IL,Porto
+2,Patrícia Gilvaz,IL,Porto
