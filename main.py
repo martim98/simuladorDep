@@ -229,7 +229,6 @@ def create_table(a, b, c, d, e, f, g,h,i ):
 
 
     data_test = {i:[round(data_p[i][0], 2)] for i in data_p.keys()}
-    print(data_test)
 
     total_n =int(a+b+c+d+e+f+g+h+i)
     total = " " + str(round(a+b+c+d+e+f+g+h+i, 1)) + "% "

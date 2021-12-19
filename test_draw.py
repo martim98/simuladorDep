@@ -19,22 +19,29 @@ data_test = {"PS":[39.16],
 def calculate_deps(data_input, rand, variation=0):
     data_input = pd.DataFrame(data_input)
     data_final_deps_tot = pd.DataFrame()
-    dict_test = []
-    for scenario in [0, 1, 2]:
+    data_to_check = pd.DataFrame()
+
+    for scenario in [0, 1]:
         for circ in range(22):
             circ_elei = pd.read_csv("circ_elei.csv")
             res_elei = pd.read_csv("res_elei.csv")
+            dist_votos = pd.read_csv("dist_votos.csv")
 
             circ_selec = circ_elei.iloc[circ, 0]
             n_deps = circ_elei.iloc[circ, 1]
             votantes = circ_elei.iloc[circ, 2]
 
+            tot_voting = 5237648
             tot_vec = res_elei[res_elei.circulo=="Total"].iloc[0, 1:11]
 
             last_sond = data_input.iloc[0, :]
 
 
+            test_test = dist_votos * ((last_sond/100)*tot_voting)
+            test_test["circulo"] = dist_votos.circulo
 
+
+            # Cenario conservador
             if scenario == 0:
                 to_add = (last_sond - tot_vec)
                 circ_baseline = res_elei[res_elei.circulo==circ_selec].iloc[0, 1:11] + to_add
@@ -49,16 +56,12 @@ def calculate_deps(data_input, rand, variation=0):
                 df_test = pd.DataFrame(df_aux)
                 df_test_count = df_test.groupby(by=df_test.index).count()
 
+            # cenario ideal
             elif scenario == 1:
-                to_add = (last_sond / tot_vec)
-                circ_baseline = res_elei[res_elei.circulo==circ_selec].iloc[0, 1:11] * to_add
 
-                while sum(circ_baseline) > 92:
-                    circ_baseline = circ_baseline - circ_baseline*0.1
+                df_aux = test_test[test_test.circulo == circ_selec]
 
-                df_aux = votantes * (circ_baseline/100)
-                df_aux = df_aux.apply(lambda x : x if x > 0  else 0)
-
+                df_aux = df_aux.iloc[0, 0:10]
 
                 for deps in range(2, n_deps+1):
                     df_aux = pd.concat([df_aux, df_aux[0:10]/deps])
@@ -68,31 +71,14 @@ def calculate_deps(data_input, rand, variation=0):
                 df_test = pd.DataFrame(df_aux)
                 df_test_count = df_test.groupby(by=df_test.index).count()
 
+                # Store values for table
                 df_test.columns = ["value"]
                 df_test["Partido"] = df_test.index
                 df_test["Circulo"] = circ_selec
 
                 data_final_deps_tot = pd.concat([data_final_deps_tot, df_test])
 
-            elif scenario == 10:
-                to_add = (last_sond / tot_vec)
-                circ_baseline = res_elei[res_elei.circulo==circ_selec].iloc[0, 1:11] * to_add
-
-                while sum(circ_baseline) > 92:
-                    circ_baseline = circ_baseline - circ_baseline*0.1
-
-                df_aux = votantes * (circ_baseline/100)
-                df_aux = df_aux.apply(lambda x : x if x > 0  else 0)
-
-                for deps in range(2, n_deps+1):
-                    df_aux = pd.concat([df_aux, df_aux[0:10]/deps])
-
-                df_aux = df_aux.sort_values(ascending=False)[:n_deps]
-
-                df_test = pd.DataFrame(df_aux)
-                df_test_count = df_test.groupby(by=df_test.index).count()
-
-
+            # cenario ajustado
             elif scenario == 2:
                 to_add = (last_sond / tot_vec)
                 circ_baseline = res_elei[res_elei.circulo==circ_selec].iloc[0, 1:11] * (to_add)
@@ -137,6 +123,7 @@ def calculate_deps(data_input, rand, variation=0):
     data_deps_list = []
     # Code to create the deps list
 
+    data_final_deps_tot["value"] = data_final_deps_tot["value"].apply(lambda x:round(x, 2))
     data_final_deps_tot["rank por circulo"] = data_final_deps_tot.groupby(["Partido", "Circulo"])["value"].rank(ascending=False)
     data_final_deps_tot["rank Global Partido"] = data_final_deps_tot.groupby(["Partido"])["value"].rank(ascending=False)
     
@@ -147,6 +134,15 @@ def calculate_deps(data_input, rand, variation=0):
     data_final_deps_tot_out["Deputado"] = data_final_deps_tot_out.value_x
     data_final_deps_tot_out = data_final_deps_tot_out[["rank por circulo", "Deputado", "Circulo", "Partido"]]
 
+    # # Calcular diferença para o total
+    # data_to_check["partidos"] = data_to_check.index
+    # sums = data_to_check.groupby("partidos").sum()
+    # tot_sum = sum(sums[0])
+    # final_to_check = sums / tot_sum
+
+
+    # Cenarios
+    total_deps_tot = total_deps_tot[[0, "scenario"]]
     total_deps_tot.columns = ["deputados", "scenario"]
     total_deps_tot.reset_index(inplace=True)
     total_deps_tot = total_deps_tot.sort_values("deputados", ascending=False)
@@ -155,12 +151,10 @@ def calculate_deps(data_input, rand, variation=0):
 
     final_table = final_table.fillna(int(0))
     final_table[final_table.columns] = final_table[final_table.columns].astype(int)
-    final_table = final_table.sort_values("Cenario 3", ascending=False)
+    final_table = final_table.sort_values("Cenario 1", ascending=False)
 
-    final_table.columns = ["Cenário conservador",
-                           "Cenário ajustado",
-                           "Cenário mais provável"]
-    final_table = final_table[["Cenário mais provável", "Cenário conservador","Cenário ajustado"]]
+    final_table.columns = ["Cenário mais provável", "Lixo"]
+    final_table = final_table[["Cenário mais provável"]]
 
 
     return final_table, data_final_deps_tot_out
