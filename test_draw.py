@@ -190,10 +190,6 @@ def calculate_deps(data_input, rand, variation=0):
 
 
 
-    print(AL)
-    print(geringonça)
-    print(ecoGeringonça)
-    print(PSDLiberal)
 
     cenarios_governo = pd.DataFrame({"Soluções Governativas":["Geringonça (PS + BE + CDU + PAN + Livre)",
                                                                                  "Aliança Democrática 2 (PSD + IL + CDS + Chega)",
@@ -207,7 +203,6 @@ def calculate_deps(data_input, rand, variation=0):
 
     cenarios_governo = cenarios_governo.sort_values("Deputados", ascending=False)
 
-    print(cenarios_governo)
 
 
 
