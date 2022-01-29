@@ -3,16 +3,16 @@ import numpy as np
 
 
 global data_test
-data_test = {"PS":[39.16],
-              "PSD":[28.02],
-              "BE":[6.16],
-              "CDS":[1.64],
-              "CDU":[5.4],
-              "PAN":[2.66],
+data_test = {"PS":[36.02],
+              "PSD":[32.34],
+              "BE":[5.8],
+              "CDS":[1.71],
+              "CDU":[5.2],
+              "PAN":[1.46],
               "A":[0],
-              "Livre":[0.2],
-              "IL":[4.1],
-              "Chega":[7.36]}
+              "Livre":[1.64],
+              "IL":[5],
+              "Chega":[5.77]}
 
 
 
@@ -156,8 +156,62 @@ def calculate_deps(data_input, rand, variation=0):
     final_table.columns = ["Cenário mais provável", "Lixo"]
     final_table = final_table[["Cenário mais provável"]]
 
+    partidos_geringonça = ["PS", "BE", "CDU", "PAN", "Livre"]
+    geringonça = 0
+    for i in partidos_geringonça:
+        try:
+            geringonça += final_table[final_table.index==i]["Cenário mais provável"].tolist()[0]
+        except IndexError:
+            geringonça += 0
 
-    return final_table, data_final_deps_tot_out
+    partidos_AL = ["PSD", "IL", "CDS", "Chega"]
+    AL = 0
+    for i in partidos_AL:
+        try:
+            AL += final_table[final_table.index==i]["Cenário mais provável"].tolist()[0]
+        except IndexError:
+            AL += 0
+
+    partidos_ecoGeringonça = ["PS", "Livre", "PAN"]
+    ecoGeringonça = 0
+    for i in partidos_ecoGeringonça:
+        try:
+            ecoGeringonça += final_table[final_table.index==i]["Cenário mais provável"].tolist()[0]
+        except IndexError:
+            ecoGeringonça += 0
+
+    partidos_PSDLiberal= ["PSD", "CDS", "IL"]
+    PSDLiberal = 0
+    for i in partidos_PSDLiberal:
+        try:
+            PSDLiberal += final_table[final_table.index==i]["Cenário mais provável"].tolist()[0]
+        except IndexError:
+            PSDLiberal += 0
+
+
+
+    print(AL)
+    print(geringonça)
+    print(ecoGeringonça)
+    print(PSDLiberal)
+
+    cenarios_governo = pd.DataFrame({"Soluções Governativas":["Geringonça (PS + BE + CDU + PAN + Livre)",
+                                                                                 "Aliança Democrática 2 (PSD + IL + CDS + Chega)",
+                                                                                 "Eco-Geringonça (PS + Livre + Pan)",
+                                                                                 "Direintonça (PSD + CDS + IL)",
+                                                                                    "PS sozinho",
+                                                                                    "PSD sozinho"],
+                                     "Deputados": [geringonça, AL, ecoGeringonça, PSDLiberal,
+                                                   final_table[final_table.index=="PS"]["Cenário mais provável"].tolist()[0],
+                                                   final_table[final_table.index=="PSD"]["Cenário mais provável"].tolist()[0]]})
+
+    cenarios_governo = cenarios_governo.sort_values("Deputados", ascending=False)
+
+    print(cenarios_governo)
+
+
+
+    return final_table, data_final_deps_tot_out, cenarios_governo
 
 
 

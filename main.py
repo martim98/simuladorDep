@@ -126,7 +126,7 @@ app.layout = html.Div([html.H1(["Politica",
 
                             html.Div([html.H2(id="disp_tot", style={"display":"inline-block", "color":"#e68200", "-webkit-text-stroke":"0.7px black"}),
                                         html.H2(" ", style={"display":"inline-block"}),
-                                      html.H2(" < 95%", style={"display":"inline-block"}),
+                                      html.H2(" < 100%", style={"display":"inline-block"}),
 
                                      html.H3("Clique em qualquer lado para atualizar", style={"margin-top":"-10px"})], style = {"text-align":"center"})
 
@@ -139,7 +139,12 @@ app.layout = html.Div([html.H1(["Politica",
                         html.H3("Numero de deputados eleitos:", style={"text-align":"center"}),
                         html.P("Maioria absoluta >= 116 deputados"),
                         dash_table.DataTable(id="output-container", sort_action="native",
-                                             style_cell={"text-align":"center","font-size":"15pt"})]),
+                                             style_cell={"text-align":"left","font-size":"15pt"})]),
+
+                        html.Div([
+                            html.H3("Cenários de governabilidade:", style={"text-align": "center"}),
+                            dash_table.DataTable(id="output-container3", sort_action="native",
+                                                 style_cell={"text-align": "left", "font-size": "15pt"})]),
 
                         html.Div([
                         html.H3("Deputados por circulo e partido:", style={"text-align":"center"}),
@@ -147,7 +152,7 @@ app.layout = html.Div([html.H1(["Politica",
                                              sort_mode="multi",
                                              style_table={'minWidth': '100%'},
                                              page_size= 15,
-                                             style_cell={"text-align":"center" ,"font-size":"15pt"})]),
+                                             style_cell={"text-align":"left","font-size":"12pt"})]),
 
                         html.Div([
                         html.H2("Evolução das sondagens"),
@@ -179,7 +184,10 @@ from test_draw import calculate_deps
      # Output(component_id="Chega_v", component_property="marks"),
 
      Output(component_id="output-container2", component_property="columns"),
-     Output(component_id="output-container2", component_property="data")],
+     Output(component_id="output-container2", component_property="data"),
+     Output(component_id="output-container3", component_property="columns"),
+     Output(component_id="output-container3", component_property="data")],
+
 
     [Input(component_id="PS_v", component_property="value", ),
      Input(component_id="PSD_v", component_property="value"),
@@ -253,8 +261,8 @@ def create_table(a, b, c, d, e, f, g,h,i ):
         dict_aux = {val_min: {'label': "", "style": {'color':'#FF8700'}}, val_max:{'label': "", "style":{'color':'#FF8700'}}}
         dicts_store.append(dict_aux)
 
-    if total_n <95:
-        b, c = calculate_deps(data_test, 1)
+    if total_n <100:
+        b, c, d = calculate_deps(data_test, 1)
         b.insert(0, 'Partidos', b.index)
         columns = [{"name":i, "id":i} for i in b.columns]
         data = b.to_dict("records")
@@ -262,17 +270,22 @@ def create_table(a, b, c, d, e, f, g,h,i ):
         columns2 = [{"name":i, "id":i} for i in c.columns]
         data2 = c.to_dict("records")
 
+        columns3 = [{"name":i, "id":i} for i in d.columns]
+        data3 = d.to_dict("records")
+
     else:
-        b = pd.DataFrame({"Erro":["Total acima de 95% ({})%, reduza algum dos valores até perfazer abaixo de 95".format(total_n)]})
+        b = pd.DataFrame({"Erro":["Total acima de 100% ({})%, reduza algum dos valores até perfazer abaixo de 100".format(total_n)]})
         columns = [{"name":i, "id":i} for i in b.columns]
         data = b.to_dict("records")
         columns2 = columns
         data2 = data
+        columns3=columns
+        data3=data
 
 
 
     return columns, data, [total], \
-           columns2, data2
+           columns2, data2, columns3, data3
            #dicts_store[0],dicts_store[1],dicts_store[2],dicts_store[3],dicts_store[4],dicts_store[5],dicts_store[6],dicts_store[7],dicts_store[8],\
 
 
